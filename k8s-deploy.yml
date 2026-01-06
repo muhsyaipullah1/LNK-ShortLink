@@ -11,12 +11,26 @@ spec:
     metadata:
       labels:
         app: shortlink
+        version: "${BUILD_NUMBER}"
     spec:
       containers:
       - name: shortlink
-        image: muhsyaipullah14/lnk-shortlink:latest
+        image: muhsyaipullah14/lnk-shortlink:${BUILD_NUMBER}
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
